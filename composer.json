@@ -1,0 +1,14 @@
+{
+    "name": "slogger/test-task",
+    "autoload": {
+        "psr-4": {
+            "Slogger\\TestTask\\": "src/"
+        }
+    },
+    "authors": [
+        {
+            "name": "Dmitry"
+        }
+    ],
+    "require": {}
+}
