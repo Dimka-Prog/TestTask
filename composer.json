@@ -1,9 +1,7 @@
 {
     "name": "slogger/test-task",
     "autoload": {
-        "psr-4": {
-            "Slogger\\TestTask\\": "src/"
-        }
+        "psr-4": {"": "src/"}
     },
     "authors": [
         {
