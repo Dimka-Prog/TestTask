@@ -3,7 +3,7 @@ CREATE DATABASE Hotel;
 USE Hotel;
 
 
-CREATE TABLE IF NOT EXISTS RoomType (
+CREATE TABLE RoomType (
     TypeID INT UNSIGNED NOT NULL,
     RoomType TEXT(100) NOT NULL,
     Price INT NOT NULL,
@@ -11,7 +11,7 @@ CREATE TABLE IF NOT EXISTS RoomType (
 );
 
 
-CREATE TABLE IF NOT EXISTS HotelStaff (
+CREATE TABLE HotelStaff (
     StaffID INT UNSIGNED NOT NULL,
     FIO VARCHAR(150) NOT NULL,
     Post VARCHAR(80) NOT NULL,
@@ -21,7 +21,7 @@ CREATE TABLE IF NOT EXISTS HotelStaff (
 );
 
 
-CREATE TABLE IF NOT EXISTS Rooms (
+CREATE TABLE Rooms (
     RoomNum INT UNSIGNED NOT NULL,
     Places INT UNSIGNED NOT NULL,
     RoomFeatures MEDIUMTEXT NULL,
@@ -43,7 +43,7 @@ CREATE TABLE IF NOT EXISTS Rooms (
 );
 
 
-CREATE TABLE IF NOT EXISTS Guests (
+CREATE TABLE Guests (
     PassportNum INT UNSIGNED NOT NULL,
     FIO VARCHAR(150) NOT NULL,
     Citizenship VARCHAR(45) NOT NULL,
@@ -53,7 +53,7 @@ CREATE TABLE IF NOT EXISTS Guests (
 );
 
 
-CREATE TABLE IF NOT EXISTS Placement (
+CREATE TABLE Placement (
     RoomNum INT UNSIGNED NOT NULL,
     PassportNum INT UNSIGNED NOT NULL,
     SetDate DATETIME NOT NULL,
@@ -72,7 +72,24 @@ CREATE TABLE IF NOT EXISTS Placement (
 );
 
 
-CREATE TABLE IF NOT EXISTS DailyAccounting (
+CREATE TABLE Bookings (
+    ID INT AUTO_INCREMENT PRIMARY KEY,
+    RoomNum INT UNSIGNED NOT NULL,
+    PassportNum INT UNSIGNED NOT NULL,
+    SetDate DATE NOT NULL,
+    DepartureDate DATE NOT NULL,
+    FOREIGN KEY (RoomNum)
+        REFERENCES Rooms (RoomNum)
+        ON DELETE CASCADE
+        ON UPDATE CASCADE,
+    FOREIGN KEY (PassportNum)
+        REFERENCES Guests (PassportNum)
+        ON DELETE CASCADE
+        ON UPDATE CASCADE
+);
+
+
+CREATE TABLE DailyAccounting (
     RoomNum INT UNSIGNED NOT NULL,
     ServiceDate DATETIME NOT NULL,
     ConditionRoom VARCHAR(45) NOT NULL, #Состояние комнаты
@@ -135,6 +152,14 @@ VALUES
     (505, 169003, '2022-02-08 13:22:11', null),
     (346, 738952, '2022-03-17 17:11:29', '2022-03-20 17:00:21'),
     (309, 310846, '2022-01-04 06:45:57', null);
+
+INSERT Bookings (RoomNum, PassportNum, SetDate, DepartureDate)
+VALUES
+    (201, 866743, '2023-05-02', '2023-05-04'),
+    (145, 491364, '2023-05-05', '2022-05-8'),
+    (505, 169003, '2023-05-05', '2023-05-06'),
+    (346, 866743, '2022-05-08', '2022-05-11'),
+    (309, 310846, '2022-05-10', '2022-05-13');
 
 INSERT DailyAccounting (RoomNum, ServiceDate, ConditionRoom, Complaints, ServicesRendered)
 VALUES

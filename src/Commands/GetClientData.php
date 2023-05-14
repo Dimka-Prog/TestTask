@@ -2,6 +2,7 @@
 namespace Commands;
 
 use Symfony\Component\Console\Command\Command;
+use Symfony\Component\Console\Input\InputArgument;
 use Symfony\Component\Console\Input\InputInterface;
 use Symfony\Component\Console\Output\OutputInterface;
 use PDO;
@@ -20,22 +21,49 @@ class GetClientData extends Command
     {
         $this
             ->setName('stepone')
-            ->setDescription('Команда для получения данных о типах комант отеля');
+            ->setDescription('Команда, выводящая все бронирования гостя по его номеру паспорта')
+            ->addArgument('PassportNum', InputArgument::REQUIRED, 'Номер паспорта гостя');
     }
 
     protected function execute(InputInterface $input, OutputInterface $output)
     {
-        // Получение всех записей из таблицы
-        $sth = $this->db->query("SELECT * FROM RoomType");
-        $rooms = $sth->fetchAll(PDO::FETCH_ASSOC);
+        $arguments = $input->getArguments();
+        $GuestPassportNum = (int)$arguments['PassportNum'];
 
-        foreach ($rooms as $room) {
-            $output->writeln("
-                TypeID: {$room['TypeID']} 
-                RoomType: {$room['RoomType']} 
-                Price: {$room['Price']}
+        // Получение ФИО гостя по его номеру паспорта
+        $sth = $this->db->query("
+                SELECT FIO
+                FROM Bookings
+                    JOIN Guests ON Bookings.PassportNum = Guests.PassportNum
+                WHERE Guests.PassportNum = $GuestPassportNum
+        ");
+        $guest = $sth->fetch(PDO::FETCH_ASSOC);
+
+        if($guest['FIO'])
+        {
+            $output->writeln("Все бронирования гостя {$guest['FIO']}:");
+
+            // Запрос на получение всех бронирований гостя по его номеру паспорта
+            $sth = $this->db->query("
+                    SELECT 
+                        SetDate, 
+                        DepartureDate,
+                        RoomNum
+                    FROM Bookings
+                    WHERE Bookings.PassportNum = $GuestPassportNum
             ");
+            $bookings = $sth->fetchAll(PDO::FETCH_ASSOC);
+
+            foreach ($bookings as $booking) {
+                $output->writeln("
+                    Дата заселения: {$booking['SetDate']}
+                    Дата выселения: {$booking['DepartureDate']}
+                    Номер комнаты: {$booking['RoomNum']}
+                ");
+            }
         }
+        else
+            $output->writeln("Гость с номером паспорта '$GuestPassportNum' еще не бронировал номера!");
 
         return Command::SUCCESS;
     }

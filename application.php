@@ -1,9 +1,9 @@
 <?php
 require 'vendor/autoload.php';
 
-use DMS\MySQL\DatabaseHotel;
-use Symfony\Component\Console\Application;
 use Commands\GetClientData;
+use DMS\Database;
+use Symfony\Component\Console\Application;
 
 // Создание и настройка подключения к базе данных
 $dms = 'mysql';
@@ -13,16 +13,16 @@ $username = 'dimkaprog';
 $password = '123456789';
 $dsn = "$dms:host=$servername;dbname=$dbname";
 
+$db = null;
 try {
     $db = new PDO($dsn, $username, $password);
 }
 catch (PDOException $PDOException)
 {
-    $mysqlDB = new DatabaseHotel($servername, $username, $password);
+    $mysqlDB = new Database($dms, $servername, $username, $password);
     $mysqlDB->creatDB('databases/MySQL/mysql.dbHotel.sql');
+    $db = new PDO($dsn, $username, $password);
 }
-
-$db = new PDO($dsn, $username, $password);
 
 // Создание экземпляра приложения Symfony Console
 $application = new Application();

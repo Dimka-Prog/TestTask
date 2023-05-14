@@ -1,15 +1,17 @@
 <?php
 
-namespace DMS\MySQL;
+namespace DMS;
 
 use mysqli;
 
-class DatabaseHotel
+class Database
 {
     private $conn;
+    private $dms;
 
-    public function __construct($servername, $username, $password)
+    public function __construct($dms, $servername, $username, $password)
     {
+        $this->dms = $dms;
         $this->connect($servername, $username, $password);
     }
 
@@ -21,7 +23,7 @@ class DatabaseHotel
             die($this->conn->connect_error);
         }
         else
-            echo "Соединение с MySQL установлено!" . PHP_EOL;
+            echo "Соединение с $this->dms установлено!" . PHP_EOL;
     }
 
     public function creatDB($sqlFile)
@@ -30,7 +32,11 @@ class DatabaseHotel
         $sql = file_get_contents($sqlFile);
 
         if ($this->conn->multi_query($sql) === TRUE) {
-            echo "SQL-скрипт $sqlFile успешно выполнен" . PHP_EOL;
+            echo "SQL-скрипт $sqlFile выполняется..." . PHP_EOL;
+
+            // Пустой цикл, который будет выполняться пока не выполнит весь sql код
+            while ($this->conn->next_result()) {}
+            echo "База данных создана!\n\n";
         } else {
             echo $this->conn->error;
         }
