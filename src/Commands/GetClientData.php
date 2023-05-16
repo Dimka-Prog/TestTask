@@ -1,6 +1,7 @@
 <?php
 namespace Commands;
 
+use Model\HotelModel;
 use Symfony\Component\Console\Command\Command;
 use Symfony\Component\Console\Input\InputArgument;
 use Symfony\Component\Console\Input\InputInterface;
@@ -27,43 +28,27 @@ class GetClientData extends Command
 
     protected function execute(InputInterface $input, OutputInterface $output)
     {
+        $hotel = new HotelModel($this->db);
         $arguments = $input->getArguments();
-        $GuestPassportNum = (int)$arguments['PassportNum'];
+        $guestPassportNum = (int)$arguments['PassportNum'];
 
-        // Получение ФИО гостя по его номеру паспорта
-        $sth = $this->db->query("
-                SELECT FIO
-                FROM Bookings
-                    JOIN Guests ON Bookings.PassportNum = Guests.PassportNum
-                WHERE Guests.PassportNum = $GuestPassportNum
-        ");
-        $guest = $sth->fetch(PDO::FETCH_ASSOC);
+        $guest = $hotel->getBookingFIO($guestPassportNum);
 
-        if($guest['FIO'])
+        if($guest->FIO)
         {
-            $output->writeln("Все бронирования гостя {$guest['FIO']}:");
+            $output->writeln("Все бронирования гостя $guest->FIO:");
 
-            // Запрос на получение всех бронирований гостя по его номеру паспорта
-            $sth = $this->db->query("
-                    SELECT 
-                        SetDate, 
-                        DepartureDate,
-                        RoomNum
-                    FROM Bookings
-                    WHERE Bookings.PassportNum = $GuestPassportNum
-            ");
-            $bookings = $sth->fetchAll(PDO::FETCH_ASSOC);
-
+            $bookings = $hotel->getGuestBookings($guestPassportNum);
             foreach ($bookings as $booking) {
                 $output->writeln("
-                    Дата заселения: {$booking['SetDate']}
-                    Дата выселения: {$booking['DepartureDate']}
-                    Номер комнаты: {$booking['RoomNum']}
+                    Дата заселения: $booking->SetDate
+                    Дата выселения: $booking->DepartureDate
+                    Номер комнаты: $booking->RoomNum
                 ");
             }
         }
         else
-            $output->writeln("Гость с номером паспорта '$GuestPassportNum' еще не бронировал номера!");
+            $output->writeln("Гость с номером паспорта '$guestPassportNum' еще не бронировал номера!");
 
         return Command::SUCCESS;
     }
