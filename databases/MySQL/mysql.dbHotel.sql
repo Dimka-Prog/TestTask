@@ -7,7 +7,8 @@ CREATE TABLE RoomType (
     TypeID INT UNSIGNED NOT NULL,
     RoomType TEXT(100) NOT NULL,
     Price INT NOT NULL,
-    PRIMARY KEY (TypeID)
+    PRIMARY KEY (TypeID),
+    INDEX idxTypeID (TypeID)
 );
 
 
@@ -17,7 +18,8 @@ CREATE TABLE HotelStaff (
     Post VARCHAR(80) NOT NULL,
     Salary INT UNSIGNED NOT NULL,
     WorkSchedule VARCHAR(5) NOT NULL,
-    PRIMARY KEY (StaffID)
+    PRIMARY KEY (StaffID),
+    INDEX idxStaffID (StaffID)
 );
 
 
@@ -39,7 +41,9 @@ CREATE TABLE Rooms (
      FOREIGN KEY (StaffID)
          REFERENCES HotelStaff (StaffID)
          ON DELETE CASCADE
-         ON UPDATE CASCADE
+         ON UPDATE CASCADE,
+    INDEX idxRoomNum (RoomNum),
+    INDEX idxTypeID (TypeID)
 );
 
 
@@ -49,7 +53,8 @@ CREATE TABLE Guests (
     Citizenship VARCHAR(45) NOT NULL,
     TypeGuest VARCHAR(45) NOT NULL,
     Discount INT NULL,
-    PRIMARY KEY (PassportNum)
+    PRIMARY KEY (PassportNum),
+    INDEX idxPassportNum (PassportNum)
 );
 
 
@@ -68,7 +73,9 @@ CREATE TABLE Placement (
      FOREIGN KEY (PassportNum)
          REFERENCES Guests (PassportNum)
          ON DELETE CASCADE
-         ON UPDATE CASCADE
+         ON UPDATE CASCADE,
+    INDEX idxRoomNum (RoomNum),
+    INDEX idxPassportNum (PassportNum)
 );
 
 
@@ -85,7 +92,8 @@ CREATE TABLE Bookings (
     FOREIGN KEY (PassportNum)
         REFERENCES Guests (PassportNum)
         ON DELETE CASCADE
-        ON UPDATE CASCADE
+        ON UPDATE CASCADE,
+    INDEX idxID (ID)
 );
 
 
@@ -100,7 +108,8 @@ CREATE TABLE DailyAccounting (
        FOREIGN KEY (RoomNum)
            REFERENCES Rooms (RoomNum)
            ON DELETE CASCADE
-           ON UPDATE CASCADE
+           ON UPDATE CASCADE,
+    INDEX idxRoomNum (RoomNum)
 );
 
 INSERT RoomType (TypeID, RoomType, Price)
