@@ -62,8 +62,8 @@ class HotelModel
                         SELECT TypeID
                         FROM Bookings
                             JOIN Rooms ON Rooms.RoomNum = Bookings.RoomNum
-                        WHERE (('$setDate' <= Bookings.SetDate AND '$setDate' <= Bookings.DepartureDate) OR
-                               ('$setDate'  >= Bookings.SetDate AND '$setDate' <= Bookings.DepartureDate))
+                        WHERE (('$setDate' <= Bookings.SetDate AND '$setDate' < Bookings.DepartureDate) OR
+                               ('$setDate'  >= Bookings.SetDate AND '$setDate' < Bookings.DepartureDate))
                               AND
                               (('$departureDate' > Bookings.SetDate AND '$departureDate' <= Bookings.DepartureDate) OR
                                ('$departureDate' > Bookings.SetDate AND '$departureDate' >= Bookings.DepartureDate))
@@ -72,23 +72,5 @@ class HotelModel
                     ORDER BY Price
             ");
         return $sth->fetchAll(PDO::FETCH_OBJ);
-    }
-
-    // Возвращает количества выходных дней в указанный промежуток дат
-    public function getCountWeekends($setDate, $departureDate)
-    {
-        $sth = $this->db->query("                
-                SELECT getCountWeekends('$setDate', '$departureDate') AS CountWeekends
-        ");
-        return $sth->fetch(PDO::FETCH_OBJ);
-    }
-
-    // Возвращает количества дней в указанный промежуток дат
-    public function getCountDays($setDate, $departureDate)
-    {
-        $sth = $this->db->query("                
-                SELECT getCountDays('$setDate', '$departureDate') AS CountDays
-        ");
-        return $sth->fetch(PDO::FETCH_OBJ);
     }
 }

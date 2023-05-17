@@ -4,37 +4,12 @@ USE Hotel;
 CREATE FUNCTION getCountWeekends(SetDate DATE, DepartureDate DATE) RETURNS INT
 DETERMINISTIC
 BEGIN
-    DECLARE currentDate DATE;
     DECLARE countWeekends INT;
 
-    SET currentDate = SetDate;
-    SET countWeekends = 0;
-
-    WHILE currentDate <= DepartureDate DO
-            IF DAYOFWEEK(currentDate) = 1 OR DAYOFWEEK(currentDate) = 7 THEN
-                SET countWeekends = countWeekends + 1;
-            END IF;
-
-            SET currentDate = currentDate + INTERVAL 1 DAY;
-        END WHILE;
+    SET countWeekends = (TIMESTAMPDIFF(DAY, SetDate, DepartureDate) DIV 7) * 2 -- Количество полных недель умножаем на 2
+        + IF(DAYOFWEEK(SetDate) = 1, 1, 0) -- Учитываем начальную дату, если это воскресенье
+        + IF(DAYOFWEEK(DepartureDate) = 7, 1, 0) -- Учитываем конечную дату, если это суббота
+        + IF(DAYOFWEEK(SetDate) > DAYOFWEEK(DepartureDate), 2, 0); -- Увеличиваем на 2, если начальная дата позже конечной
 
     RETURN countWeekends;
-END;
-
-
-CREATE FUNCTION getCountDays(SetDate DATE, DepartureDate DATE) RETURNS INT
-DETERMINISTIC
-BEGIN
-    DECLARE currentDate DATE;
-    DECLARE countDays INT;
-
-    SET currentDate = SetDate;
-    SET countDays = 0;
-
-    WHILE currentDate < DepartureDate DO
-            SET countDays = countDays + 1;
-            SET currentDate = currentDate + INTERVAL 1 DAY;
-        END WHILE;
-
-    RETURN countDays;
 END;

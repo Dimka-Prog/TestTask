@@ -1,6 +1,7 @@
 <?php
 namespace Commands;
 
+use Model\DateHelper;
 use Model\HotelModel;
 use Symfony\Component\Console\Command\Command;
 use Symfony\Component\Console\Input\InputArgument;
@@ -38,8 +39,8 @@ class GetRoomsTypes extends Command
         $departureDate = (string)$arguments['DepartureDate'];
         $passportNum = (int)$arguments['PassportNum'];
 
-        $weekends = (int)$hotel->getCountWeekends($setDate, $departureDate)->CountWeekends;
-        $days = (int)$hotel->getCountDays($setDate, $departureDate)->CountDays;
+        $weekends = (int)DateHelper::getCountWeekends($this->db, $setDate, $departureDate)->CountWeekends;
+        $days = (int)DateHelper::getCountDays($this->db, $setDate, $departureDate)->CountDays;
         $guest = $hotel->getGuest($passportNum);
 
         $discount = (int)$guest->Discount * $weekends;
