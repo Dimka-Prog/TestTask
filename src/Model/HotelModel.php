@@ -58,17 +58,16 @@ class HotelModel
                         Price
                     FROM RoomType
                         JOIN Rooms ON Rooms.TypeID = RoomType.TypeID
-                    WHERE Rooms.TypeID NOT IN(
-                        SELECT TypeID
+                    WHERE Rooms.RoomNum NOT IN(
+                        SELECT RoomNum
                         FROM Bookings
-                            JOIN Rooms ON Rooms.RoomNum = Bookings.RoomNum
                         WHERE (('$setDate' <= Bookings.SetDate AND '$setDate' < Bookings.DepartureDate) OR
                                ('$setDate'  >= Bookings.SetDate AND '$setDate' < Bookings.DepartureDate))
                               AND
                               (('$departureDate' > Bookings.SetDate AND '$departureDate' <= Bookings.DepartureDate) OR
                                ('$departureDate' > Bookings.SetDate AND '$departureDate' >= Bookings.DepartureDate))
                     )
-                    GROUP BY Price, RoomType
+                    GROUP BY RoomType, Price
                     ORDER BY Price
             ");
         return $sth->fetchAll(PDO::FETCH_OBJ);
