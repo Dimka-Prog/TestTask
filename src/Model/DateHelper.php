@@ -6,7 +6,7 @@ use PDO;
 
 class DateHelper
 {
-    // Возвращает количества выходных дней в указанный промежуток дат
+    // Возвращает количество выходных дней в указанный промежуток дат
     public static function getCountWeekends(PDO $db, $setDate, $departureDate)
     {
         $sth = $db->query("                
@@ -15,7 +15,7 @@ class DateHelper
         return $sth->fetch(PDO::FETCH_OBJ);
     }
 
-    // Возвращает количества дней в указанный промежуток дат
+    // Возвращает количество дней в указанный промежуток дат
     public static function getCountDays(PDO $db, $setDate, $departureDate)
     {
         $sth = $db->query("                

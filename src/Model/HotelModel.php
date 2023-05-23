@@ -61,13 +61,11 @@ class HotelModel
                     WHERE Rooms.RoomNum NOT IN(
                         SELECT RoomNum
                         FROM Bookings
-                        WHERE (('$setDate' <= Bookings.SetDate AND '$setDate' < Bookings.DepartureDate) OR
-                               ('$setDate'  >= Bookings.SetDate AND '$setDate' < Bookings.DepartureDate))
+                        WHERE (('$setDate' <= Bookings.SetDate OR '$setDate' >= Bookings.SetDate) AND '$setDate' < Bookings.DepartureDate)
                               AND
-                              (('$departureDate' > Bookings.SetDate AND '$departureDate' <= Bookings.DepartureDate) OR
-                               ('$departureDate' > Bookings.SetDate AND '$departureDate' >= Bookings.DepartureDate))
+                              (('$departureDate' <= Bookings.DepartureDate OR '$departureDate' >= Bookings.DepartureDate) AND '$departureDate' > Bookings.SetDate)
                     )
-                    GROUP BY RoomType, Price
+                    GROUP BY RoomType.TypeID
                     ORDER BY Price
             ");
         return $sth->fetchAll(PDO::FETCH_OBJ);

@@ -43,7 +43,8 @@ CREATE TABLE Rooms (
          ON DELETE CASCADE
          ON UPDATE CASCADE,
     INDEX idxRoomNum (RoomNum),
-    INDEX idxTypeID (TypeID)
+    INDEX idxTypeID (TypeID),
+    INDEX idxStaffID (StaffID)
 );
 
 
@@ -93,7 +94,8 @@ CREATE TABLE Bookings (
         REFERENCES Guests (PassportNum)
         ON DELETE CASCADE
         ON UPDATE CASCADE,
-    INDEX idxID (ID)
+    INDEX idxRoomNum (RoomNum),
+    INDEX idxPassportNum (PassportNum)
 );
 
 
@@ -166,7 +168,7 @@ INSERT Bookings (RoomNum, PassportNum, SetDate, DepartureDate)
 VALUES
     (201, 866743, '2023-05-02', '2023-05-04'),
     (145, 491364, '2023-05-05', '2022-05-08'),
-    (505, 169003, '2023-05-05', '2023-05-12'),
+    (426, 169003, '2023-05-05', '2023-05-12'),
     (457, 866743, '2023-05-08', '2023-05-20'),
     (505, 310846, '2023-05-10', '2023-05-23');
 
