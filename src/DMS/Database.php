@@ -7,23 +7,19 @@ use mysqli;
 class Database
 {
     private $conn;
-    private $dms;
 
-    public function __construct($dms, $servername, $username, $password)
+    public function __construct($hostname, $username, $password)
     {
-        $this->dms = $dms;
-        $this->connect($servername, $username, $password);
+        $this->connect($hostname, $username, $password);
     }
 
-    private function connect($servername, $username, $password)
+    private function connect($hostname, $username, $password)
     {
-        $this->conn = new mysqli($servername, $username, $password);
+        $this->conn = new mysqli($hostname, $username, $password);
         // Проверка соединения
         if ($this->conn->connect_error) {
             die($this->conn->connect_error);
         }
-        else
-            echo "Соединение с $this->dms установлено!" . PHP_EOL;
     }
 
     public function creatDB($sqlFile)
@@ -37,10 +33,15 @@ class Database
             // Пустой цикл, который будет выполняться пока не выполнит весь sql код
             while ($this->conn->next_result()) {}
             echo "База данных создана!\n\n";
-        } else {
+        } else
             echo $this->conn->error;
-        }
+    }
 
-        $this->conn->close();
+    public function readSQL($sqlFile)
+    {
+        $sql = file_get_contents($sqlFile);
+
+        if ($this->conn->multi_query($sql) === FALSE)
+            echo $this->conn->error;
     }
 }

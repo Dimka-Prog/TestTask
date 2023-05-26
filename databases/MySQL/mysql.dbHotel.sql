@@ -7,7 +7,8 @@ CREATE TABLE RoomType (
     TypeID INT UNSIGNED NOT NULL,
     RoomType TEXT(100) NOT NULL,
     Price INT NOT NULL,
-    PRIMARY KEY (TypeID)
+    PRIMARY KEY (TypeID),
+    INDEX idxTypeID (TypeID)
 );
 
 
@@ -17,7 +18,8 @@ CREATE TABLE HotelStaff (
     Post VARCHAR(80) NOT NULL,
     Salary INT UNSIGNED NOT NULL,
     WorkSchedule VARCHAR(5) NOT NULL,
-    PRIMARY KEY (StaffID)
+    PRIMARY KEY (StaffID),
+    INDEX idxStaffID (StaffID)
 );
 
 
@@ -39,7 +41,10 @@ CREATE TABLE Rooms (
      FOREIGN KEY (StaffID)
          REFERENCES HotelStaff (StaffID)
          ON DELETE CASCADE
-         ON UPDATE CASCADE
+         ON UPDATE CASCADE,
+    INDEX idxRoomNum (RoomNum),
+    INDEX idxTypeID (TypeID),
+    INDEX idxStaffID (StaffID)
 );
 
 
@@ -49,7 +54,8 @@ CREATE TABLE Guests (
     Citizenship VARCHAR(45) NOT NULL,
     TypeGuest VARCHAR(45) NOT NULL,
     Discount INT NULL,
-    PRIMARY KEY (PassportNum)
+    PRIMARY KEY (PassportNum),
+    INDEX idxPassportNum (PassportNum)
 );
 
 
@@ -68,7 +74,9 @@ CREATE TABLE Placement (
      FOREIGN KEY (PassportNum)
          REFERENCES Guests (PassportNum)
          ON DELETE CASCADE
-         ON UPDATE CASCADE
+         ON UPDATE CASCADE,
+    INDEX idxRoomNum (RoomNum),
+    INDEX idxPassportNum (PassportNum)
 );
 
 
@@ -85,7 +93,9 @@ CREATE TABLE Bookings (
     FOREIGN KEY (PassportNum)
         REFERENCES Guests (PassportNum)
         ON DELETE CASCADE
-        ON UPDATE CASCADE
+        ON UPDATE CASCADE,
+    INDEX idxRoomNum (RoomNum),
+    INDEX idxPassportNum (PassportNum)
 );
 
 
@@ -100,7 +110,8 @@ CREATE TABLE DailyAccounting (
        FOREIGN KEY (RoomNum)
            REFERENCES Rooms (RoomNum)
            ON DELETE CASCADE
-           ON UPDATE CASCADE
+           ON UPDATE CASCADE,
+    INDEX idxRoomNum (RoomNum)
 );
 
 INSERT RoomType (TypeID, RoomType, Price)
@@ -142,8 +153,8 @@ VALUES
     (866743, 'Максимова Агата Никитична', 'Россия', 'Обычный', null),
     (491364, 'Семенов Макар Дмитриевич', 'Норвегия', 'Обычный', null),
     (310846, 'Черкасов Захар Матвеевич', 'Индий', 'Постоянный', 800),
-    (738952, 'Лукьянова Стефания Дмитриевна', 'Греция', ' VIP', null),
-    (169003, 'Иванова Ева Львовна', 'Македония', 'Постоянный, VIP', 1300);
+    (738952, 'Лукьянова Стефания Дмитриевна', 'Греция', ' VIP', 1300),
+    (169003, 'Иванова Ева Львовна', 'Македония', 'Постоянный, VIP', 1500);
 
 INSERT Placement (RoomNum, PassportNum, SetDate, DepartureDate)
 VALUES
@@ -156,10 +167,10 @@ VALUES
 INSERT Bookings (RoomNum, PassportNum, SetDate, DepartureDate)
 VALUES
     (201, 866743, '2023-05-02', '2023-05-04'),
-    (145, 491364, '2023-05-05', '2022-05-8'),
-    (505, 169003, '2023-05-05', '2023-05-06'),
-    (346, 866743, '2022-05-08', '2022-05-11'),
-    (309, 310846, '2022-05-10', '2022-05-13');
+    (145, 491364, '2023-05-05', '2022-05-08'),
+    (426, 169003, '2023-05-05', '2023-05-12'),
+    (457, 866743, '2023-05-08', '2023-05-20'),
+    (505, 310846, '2023-05-10', '2023-05-23');
 
 INSERT DailyAccounting (RoomNum, ServiceDate, ConditionRoom, Complaints, ServicesRendered)
 VALUES

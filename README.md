@@ -1,8 +1,13 @@
 ## Описание проекта
-Данный проект представляет собой консольное приложение, которое по команде `php application.php stepone <clientID>` выводит все бронирования гостя в отеле по его номеру паспорта.
+Данный проект представляет собой консольное приложение состоящее из двух команд:<br/> 
+1. `php application.php stepone <clientID>` - выводит все бронирования гостя в отеле по его номеру паспорта.<br/>
+2. `php application.php rtypes <SetDate> <DepartureDate> <clientID>` - выводит все типы номеров и их стоимость, которые может забронировать гость.
 ## Демонстрация работы
-![image](https://github.com/Dimka-Prog/TestTask/assets/91527667/b70da15d-ec96-42ee-8a8a-2f15dfdec766)
+### Команда `stepone`
+![image](https://github.com/Dimka-Prog/TestTask/assets/91527667/ddbdd814-fd2d-4ad7-ac18-738a7f671264)
+### Команда `rtypes`
+![image](https://github.com/Dimka-Prog/TestTask/assets/91527667/408de3fa-cd26-4e1a-bbdd-48309878a269)
 ## Используемые технологии
-1. PHP `8.1`
-2. Composer `2.5.5`
-3. symfony/console `6.2`
+1. PHP `v8.1`
+2. Composer `v2.5.5`
+3. symfony/console `v6.2`
